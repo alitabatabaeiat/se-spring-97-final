@@ -8,6 +8,7 @@
         name="input-1"
         label="جستجو ..."
         v-show="searchField"
+        transition="fade-transition"
       ></v-text-field>
       <v-btn icon @click.native.stop="searchField=!searchField">
         <v-icon>search</v-icon>
@@ -28,38 +29,12 @@
       </v-toolbar-items>
     </v-toolbar>
     <v-content style="direction: rtl" class="pa-3">
-      <v-container fluid grid-list-sm>
-        <v-carousel hide-controls>
-          <v-carousel-item v-for="(item,i) in carousel" :src="item.src" :key="i"></v-carousel-item>
-        </v-carousel>
-
-        <v-divider class="my-4 mx-auto" style="width: 80%;"></v-divider>
-
-        <v-subheader style="font-size: 28px; color: #000; margin: -10px 0 10px;">محصولات ما</v-subheader>
-        <v-layout row wrap>
-          <v-flex xs12 sm3></v-flex>
-          <v-flex xs12 sm9>
-            <v-layout row wrap>
-              <v-flex xs12 sm4 v-for="(g,i) in goods" :key="i" class="pr-3 pb-3">
-                <v-card>
-                  <v-card-media :src="g.img" height="200px">
-                  </v-card-media>
-                  <v-card-title primary-title>
-                    <GoodsDetail :detail="g.detail"/>
-                  </v-card-title>
-                </v-card>
-              </v-flex>
-            </v-layout>
-          </v-flex>
-        </v-layout>
-      </v-container>
+      <router-view></router-view>
     </v-content>
   </v-app>
 </template>
 
 <script>
-  import GoodsDetail from './components/GoodsDetail'
-
   export default {
     data() {
       return {
@@ -68,74 +43,9 @@
         cart: 'سبد خرید',
         color: 'teal',
         searchField: false,
-        carousel: [
-          {
-            src: '/static/1.jpg'
-          },
-          {
-            src: '/static/2.jpg'
-          },
-          {
-            src: '/static/3.jpg'
-          }
-        ],
-        goods: [
-          {
-            img: '/static/3.jpg',
-            detail: {
-              name: 'لپ تاپ',
-              supplier: 'سید علی طباطبایی',
-              numOfVotes: '۲۲',
-              star: '۳.۴',
-              price: '۱۲۰۰۰'
-            }
-          },
-          {
-            img: '/static/1.jpg',
-            detail: {
-              name: 'آبمیوه',
-              supplier: 'سید علی طباطبایی',
-              numOfVotes: '۳۲',
-              star: '۴.۱',
-              price: '۱۲۰۲۰۰'
-            }
-          },
-          {
-            img: '/static/2.jpg',
-            detail: {
-              name: 'کفش ورزشی',
-              supplier: 'سید علی طباطبایی',
-              numOfVotes: '۱',
-              star: '۰.۳',
-              price: '۱۲۰'
-            }
-          }, {
-            img: '/static/2.jpg',
-            detail: {
-              name: 'کفش ورزشی',
-              supplier: 'سید علی طباطبایی',
-              numOfVotes: '۱',
-              star: '۱.۳',
-              price: '۱۲۰'
-            }
-          },
-          {
-            img: '/static/3.jpg',
-            detail: {
-              name: 'لپ تاپ',
-              supplier: 'سید علی طباطبایی',
-              numOfVotes: '۲۲',
-              star: '۲.۳',
-              price: '۱۲۰۰۰'
-            }
-          }
-        ]
       }
     },
-    name: 'App',
-    components: {
-      GoodsDetail
-    }
+    name: 'App'
   }
 </script>
 
@@ -153,13 +63,6 @@
       transform-origin: top right;
       padding-right: 5px;
     }
-
-    input {
-    }
-  }
-
-  .card {
-    cursor: pointer;
   }
 
   .title {
