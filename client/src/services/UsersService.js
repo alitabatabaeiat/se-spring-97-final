@@ -5,8 +5,6 @@ export default {
     return Api().get('users')
   },
   fetchOneUser (id) {
-    console.log(id)
-
-    return Api().get('users/' + id)
+    return Api().get(`users/${id}`)
   }
 }

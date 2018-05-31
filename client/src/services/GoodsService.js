@@ -5,6 +5,6 @@ export default {
     return Api().get('goods')
   },
   fetchOneGoods (id) {
-    return Api().get(`goods/${{id}}`)
+    return Api().get(`goods/${id}`)
   }
 }
