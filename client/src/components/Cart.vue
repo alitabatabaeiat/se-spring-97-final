@@ -1,29 +1,78 @@
 <template>
-  <v-data-table
-    :headers="headers"
-    :items="$store.state.cart"
-    hide-actions
-    class="elevation-1"
-  >
-    <template slot="items" slot-scope="props">
-      <td class="text-xs-center">{{ props.item.name }}</td>
-      <td class="text-xs-center">{{ props.item.supplier }}</td>
-      <td class="text-xs-center">
-        <v-text-field
-          id="testing"
-          name="input-1"
-          flat
-          solo
-          :value="props.item.quantity | EngToFaNum"
-          @input="val => changeQuantity(val, props.item.id)"
-          style="width: 80px; margin: 0 auto;"
-        ></v-text-field>
-      </td>
-      <td class="text-xs-center">{{ props.item.price | EngToFaNum }}</td>
-      <td class="text-xs-center">{{ props.item.price * props.item.quantity | EngToFaNum }}</td>
-      <!--<td class="text-xs-middle">{{ props.item.iron }}</td>-->
-    </template>
-  </v-data-table>
+  <div>
+    <v-data-table
+      :headers="headers"
+      :items="$store.state.cart"
+      hide-actions
+      class="elevation-1"
+    >
+      <template slot="items" slot-scope="props">
+        <td class="text-xs-center"><img :src="props.item.image"
+                                        style="max-width: 100px; max-height: 48px; position: relative; top: 6%;"/><span
+          style="position:relative; top: -34%; margin-right: 5px;">{{ props.item.name }}</span></td>
+        <td class="text-xs-center">{{ props.item.supplier }}</td>
+        <td class="text-xs-center">
+          <v-text-field
+            id="testing"
+            name="input-1"
+            flat
+            solo
+            :value="props.item.quantity | EngToFaNum"
+            @input="val => changeQuantity(val, props.item.id)"
+            style="width: 80px; margin: 0 auto;"
+          ></v-text-field>
+        </td>
+        <td class="text-xs-center">{{ props.item.price | EngToFaNum }}</td>
+        <td class="text-xs-center" ref="lastCol">{{ props.item.price * props.item.quantity | EngToFaNum }}</td>
+        <!--<td class="text-xs-middle">{{ props.item.iron }}</td>-->
+      </template>
+    </v-data-table>
+    <div class="totalPrice" :style="{width: totalPriceWidth + 'px'}">
+      <div>جمع کل: {{$store.state.totalPrice | EngToFaNum}} تومان</div>
+      <div>هزینه پیک: {{delivery | EngToFaNum}}‌ تومان</div>
+      <div>قابل پرداخت: {{delivery + $store.state.totalPrice | EngToFaNum}}‌ تومان</div>
+      <v-btn color="teal" class="checkout" @click="checkout" :disabled="checkoutDisabled" dark="checkoutDisabled">
+        <span>پرداخت</span>
+        <v-icon right>credit_card</v-icon>
+      </v-btn>
+    </div>
+
+    <div style="margin: 20px 0;">
+      <h2>انتخاب آدرس</h2>
+    </div>
+    <v-data-table
+      :items="addresses"
+      class="elevation-1"
+      hide-actions
+      select-all
+      v-model="selected"
+      :headers="[{
+            text: 'ردیف',
+            align: 'right',
+            sortable: false,
+            value: 'row'
+          },
+          {
+            text: 'آدرس',
+            align: 'right',
+            sortable: false,
+            value: 'address'
+          }]"
+      style="width: 70%;"
+    >
+      <template slot="items" slot-scope="props">
+        <td>
+          <v-checkbox
+            v-model="props.selected"
+            primary
+            hide-details
+          ></v-checkbox>
+        </td>
+        <td>{{ props.item.row }}</td>
+        <td class="text-xs-right">{{ props.item.address }}</td>
+      </template>
+    </v-data-table>
+  </div>
 </template>
 
 <script>
@@ -41,33 +90,69 @@
             text: 'فروشنده',
             align: 'middle',
             sortable: false,
-            value: 'calories'
+            value: 'supplier'
           },
           {
             text: 'تعداد',
             align: 'middle',
             sortable: false,
-            value: 'fat'
+            value: 'quantity'
           },
           {
             text: 'قیمت واحد',
             align: 'middle',
             sortable: false,
-            value: 'carbs'
+            value: 'price'
           },
           {
             text: 'قیمت کل',
             align: 'middle',
             sortable: false,
-            value: 'protein'
+            value: 'totalPrice'
           },
         ],
+        addresses: [
+          {
+            row: 1,
+            address: 'خ امیرآباد شمالی بالاتر از خ جلال آل احمد دانشگاه تهران'
+          }
+        ],
+        selected: [
+          {
+            row: 1,
+            address: 'خ امیرآباد شمالی بالاتر از خ جلال آل احمد دانشگاه تهران'
+          }
+        ],
+        totalPriceWidth: 200,
+        delivery: 8000,
+        checkoutDisabled: false
       }
     },
     methods: {
-      changeQuantity (x, y) {
+      changeQuantity(x, y) {
         x = this.$options.filters.FaToEngNum(x)
         this.$store.commit('changeQuantity', {id: y, quantity: x})
+      },
+    },
+    mounted() {
+      let that = this;
+      that.totalPriceWidth = that.$refs.lastCol.clientWidth
+      this.$nextTick(function () {
+        window.addEventListener('resize', function (e) {
+          that.totalPriceWidth = that.$refs.lastCol.clientWidth
+        });
+      })
+    },
+    watch: {
+      selected (newVal) {
+        if (newVal.length > 0) {
+          this.delivery = 8000
+          this.checkoutDisabled = false
+        }
+        else {
+          this.delivery = 0
+          this.checkoutDisabled = true
+        }
       }
     },
     name: "Cart"
@@ -75,5 +160,23 @@
 </script>
 
 <style scoped>
+
+  .totalPrice {
+    float: left;
+    text-align: left;
+    margin-top: 20px;
+    margin-left: 20px;
+  }
+
+  .totalPrice div:nth-child(2), .totalPrice div:nth-child(3) {
+    margin-top: 7px;
+  }
+
+  .checkout {
+    direction: ltr;
+    height: 45px;
+    margin-left: 0;
+    margin-top: 35px;
+  }
 
 </style>

@@ -11,7 +11,8 @@ Vue.use(Vuex)
 
 const store = new Vuex.Store({
   state: {
-    cart: []
+    cart: [],
+    totalPrice: 0
   },
   mutations: {
     addToCart (state, newProduct) {
@@ -25,22 +26,26 @@ const store = new Vuex.Store({
         state.cart.push({
           id: newProduct.id,
           name: newProduct.detail.name,
-          price: newProduct.detail.price,
+          price: parseInt(newProduct.detail.price),
           description: newProduct.description,
-          image: newProduct.description,
+          image: newProduct.image,
           supplier: newProduct.detail.supplier,
           quantity: 1
         })
+      state.totalPrice += state.cart[state.cart.length - 1].price
     },
     changeQuantity (state, product) {
       let p = state.cart.find(p => {
         return p.id === product.id
       })
 
+      state.totalPrice += p.price * (product.quantity - p.quantity)
       p.quantity = product.quantity
     },
     removeFromCart (state, product) {
-      state.cart.remove(product)
+      let index = state.cart.indexOf(product)
+      state.totalPrice -= state.cart[index].price * state.cart[index].quantity
+      delete state.cart[index]
     }
   }
 })
