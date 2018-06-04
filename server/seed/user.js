@@ -9,12 +9,20 @@ const User = require('../models/user')
 
 const users = [
     {
-        firstName: 'احمد',
-        familyName: 'غلامی',
+        firstName: 'فرزانه',
+        familyName: 'زیرک',
+        email: 'ahmad.gholami@gmail.com',
+        phoneNumber: '091200000000',
+        image: '/static/profile3.jpg',
+        type: 1
+    },
+    {
+        firstName: 'محمد',
+        familyName: 'صفایی',
         email: 'ahmad.gholami@gmail.com',
         phoneNumber: '091200000000',
         image: '/static/profile2.jpg',
-        type: 0
+        type: 1
     },
     {
         firstName: 'علی',
@@ -26,11 +34,14 @@ const users = [
     }
 ]
 
-User.deleteMany({}, err => console.log(err))
+User.deleteMany({}, err => {
+    if (err)
+        console.log(err)
 
-for (user of users) {
-    let newUser = new User(user)
-    newUser.save()
-}
+    for (user of users) {
+        let newUser = new User(user)
+        newUser.save()
+    }
+});
 
 // db.close()

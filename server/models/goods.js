@@ -6,7 +6,7 @@ const GoodsSchema = new Schema({
   name: String,
   image: String,
   price: Number,
-  number: Number,
+  quantity: Number,
   kind: Number, // 0: physical, 1: not physical
   supplier: {
     type: mongoose.Schema.Types.ObjectId,

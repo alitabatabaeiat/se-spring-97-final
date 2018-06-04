@@ -26,6 +26,15 @@
           <v-icon right>comment</v-icon>
         </v-btn>
       </v-flex>
+      <v-snackbar
+        :timeout="5000"
+        top
+        color="success"
+        v-model="snackbar"
+      >
+        {{ snackbarText }}
+        <v-btn flat color="pink" @click.native="snackbar = false">Close</v-btn>
+      </v-snackbar>
     </v-layout>
   </div>
 </template>
@@ -37,25 +46,35 @@
   export default {
     data() {
       return {
-        goods: {}
+        goods: {},
+        snackbar: false,
+        snackbarText: '',
+        quantity: 1
       }
     },
     components: {
       GoodsDetail
     },
     mounted() {
-      console.log(this.$route.params)
       this.getGoods()
     },
     methods: {
       async getGoods() {
         const response = await GoodsService.fetchOneGoods(this.$route.params.id)
-        console.log(response)
         this.goods = response.data.goods
       },
-      addToCart () {
+      addToCart() {
+        if (this.snackbar) {
+          this.quantity++
+          this.snackbarText = `${ this.$options.filters.EngToFaNum(this.quantity) } ${ this.goods.detail.name } به سبد کالا افزوده شد.`
+        }
+        else {
+          this.quantity = 1
+          this.snackbarText = `${ this.goods.detail.name } به سبد کالا افزوده شد.`
+        }
+        this.snackbar = true
         this.$store.commit('addToCart', this.goods)
-        this.$router.push('/cart')
+        // this.$router.push('/cart')
       }
     },
     name: "GoodsView"

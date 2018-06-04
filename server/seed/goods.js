@@ -12,10 +12,10 @@ const goods = [
         name: 'لپ تاپ',
         image: '/static/3.jpg',
         price: 1200000,
-        Number: 10,
+        quantity: 10,
         Kind: 0,
         description: '۱۵ اینچ',
-        supplier: mongoose.Types.ObjectId("5b0e7b5ed964481bdfdd1665"),
+        supplier: mongoose.Types.ObjectId("5b144e5195ca3f0f6b909059"),
         star: {
             score: 4.7,
             number: 143
@@ -25,10 +25,10 @@ const goods = [
         name: 'آبمیوه',
         image: '/static/1.jpg',
         price: 1200,
-        Number: 20000,
+        quantity: 20000,
         Kind: 0,
         description: 'پرتقالی',
-        supplier: mongoose.Types.ObjectId("5b0e7b5ed964481bdfdd1665"),
+        supplier: mongoose.Types.ObjectId("5b144e5195ca3f0f6b909059"),
         star: {
             score: 3.2,
             number: 1701
@@ -38,10 +38,10 @@ const goods = [
         name: 'کفش ورزشی',
         image: '/static/2.jpg',
         price: 120000,
-        Number: 100,
+        quantity: 100,
         Kind: 0,
         description: 'نایک',
-        supplier: mongoose.Types.ObjectId("5b0e7b5ed964481bdfdd1664"),
+        supplier: mongoose.Types.ObjectId("5b144e5195ca3f0f6b909059"),
         star: {
             score: 2.5,
             number: 893
@@ -51,10 +51,10 @@ const goods = [
         name: 'تره فرنگی',
         image: '/static/4.jpg',
         price: 120,
-        Number: 10000,
+        quantity: 10000,
         Kind: 0,
         description: '',
-        supplier: mongoose.Types.ObjectId("5b0e7b5ed964481bdfdd1664"),
+        supplier: mongoose.Types.ObjectId("5b144e5195ca3f0f6b90905a"),
         star: {
             score: 0.5,
             number: 83
@@ -64,10 +64,10 @@ const goods = [
         name: 'آنتی ویروس',
         image: '/static/2.jpg',
         price: 150000,
-        Number: 120,
+        quantity: 120,
         Kind: 0,
         description: 'کسپراسکای',
-        supplier: mongoose.Types.ObjectId("5b0e7b5ed964481bdfdd1665"),
+        supplier: mongoose.Types.ObjectId("5b144e5195ca3f0f6b90905a"),
         star: {
             score: 3.6,
             number: 8

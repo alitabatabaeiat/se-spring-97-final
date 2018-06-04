@@ -47,7 +47,8 @@ app.get('/goods', async (req, res) => {
                 name: g.name,
                 price: g.price,
                 supplier: `${user.firstName} ${user.familyName}`,
-                star: g.star
+                star: g.star,
+                quantity: g.quantity
             }
         })
     }
@@ -69,7 +70,8 @@ app.get('/goods/:id', async (req, res) => {
                 name: goods.name,
                 price: goods.price,
                 supplier: `${user.firstName} ${user.familyName}`,
-                star: goods.star
+                star: goods.star,
+                quantity: goods.quantity
             },
             description: goods.description
         },
