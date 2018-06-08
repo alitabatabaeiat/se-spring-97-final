@@ -8,8 +8,9 @@
     >
       <template slot="items" slot-scope="props">
         <td class="text-xs-center">
-          <v-icon style="max-height: 48px; position: relative; bottom: 37.5%; color: #c62828; cursor: pointer;"
-                  @click="removeFromCart (props.item.id)">delete_forever
+          <v-icon
+            style="max-height: 48px; position: relative; top: 14px; color: #c62828; cursor: pointer; float: right;"
+            @click="removeFromCart (props.item.id)">delete_forever
           </v-icon>
           <img :src="props.item.image" style="max-width: 100px; max-height: 48px; position: relative; top: 6%;"/>
           <span style="position:relative; top: -34%; margin-right: 5px;">{{ props.item.name }}</span></td>
@@ -91,10 +92,23 @@
         </v-card>
       </v-dialog>
     </v-layout>
+
+    <v-snackbar
+      :timeout="5000"
+      top
+      color="success"
+      v-model="snackbar"
+    >
+      به این تعداد از کالا نداریم
+      <v-btn flat color="pink" @click.native="snackbar = false">بستن</v-btn>
+    </v-snackbar>
   </div>
 </template>
 
 <script>
+  import GoodsService from '@/services/GoodsService'
+
+
   export default {
     data() {
       return {
@@ -144,14 +158,27 @@
         ],
         totalPriceWidth: 200,
         delivery: 8000,
-        checkoutDisabled: false,
-        dialog: false
+        checkoutDisabled: true,
+        dialog: false,
+        snackbar: false
       }
     },
     methods: {
-      changeQuantity(x, y) {
-        x = this.$options.filters.FaToEngNum(x)
-        this.$store.commit('changeQuantity', {id: y, quantity: x})
+      async changeQuantity(quantity, id) {
+        quantity = this.$options.filters.FaToEngNum(quantity)
+        const res = await GoodsService.fetchOneGoods(id)
+        const q = res.data.goods.detail.quantity
+        let p = this.$store.state.cart.find(p => {
+          return p.id === id
+        })
+        console.log(quantity)
+        console.log(p.quantity)
+        console.log(q)
+        if (q < parseInt(quantity) + parseInt(p.quantity)) {
+          this.snackbar = true
+          return
+        }
+        this.$store.commit('changeQuantity', {id, quantity})
       },
       removeFromCart(id) {
         this.dialog = true
@@ -160,7 +187,8 @@
       removeConfirmed() {
         this.$store.commit('removeFromCart', this.remove)
         this.dialog = false
-
+        if (this.$store.state.cart.length === 0)
+          this.checkoutDisabled = true
       },
       checkout() {
 
@@ -174,6 +202,8 @@
           that.totalPriceWidth = that.$refs.lastCol.clientWidth
         });
       })
+      if (this.$store.state.cart.length > 0)
+        this.checkoutDisabled = false
     },
     watch: {
       selected(newVal) {

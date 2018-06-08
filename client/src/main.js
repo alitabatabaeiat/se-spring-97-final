@@ -9,13 +9,17 @@ import 'vuetify/dist/vuetify.min.css'
 
 Vue.use(Vuex)
 
+String.prototype.replaceAt = function (index, replacement) {
+  return this.substr(0, index) + replacement + this.substr(index + replacement.length);
+};
+
 const store = new Vuex.Store({
   state: {
     cart: [],
     totalPrice: 0
   },
   mutations: {
-    addToCart (state, newProduct) {
+    addToCart(state, newProduct) {
       let product = state.cart.find(product => {
         return product.id === newProduct.id
       })
@@ -34,7 +38,7 @@ const store = new Vuex.Store({
         })
       state.totalPrice += state.cart[state.cart.length - 1].price
     },
-    changeQuantity (state, product) {
+    changeQuantity(state, product) {
       let p = state.cart.find(p => {
         return p.id === product.id
       })
@@ -42,7 +46,7 @@ const store = new Vuex.Store({
       state.totalPrice += p.price * (product.quantity - p.quantity)
       p.quantity = product.quantity
     },
-    removeFromCart (state, productID) {
+    removeFromCart(state, productID) {
       let p = state.cart.find(p => {
         return p.id === productID
       })
@@ -99,7 +103,3 @@ new Vue({
   components: {App},
   template: '<App/>'
 })
-
-String.prototype.replaceAt = function (index, replacement) {
-  return this.substr(0, index) + replacement + this.substr(index + replacement.length);
-};
