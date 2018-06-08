@@ -7,9 +7,12 @@
       class="elevation-1"
     >
       <template slot="items" slot-scope="props">
-        <td class="text-xs-center"><img :src="props.item.image"
-                                        style="max-width: 100px; max-height: 48px; position: relative; top: 6%;"/><span
-          style="position:relative; top: -34%; margin-right: 5px;">{{ props.item.name }}</span></td>
+        <td class="text-xs-center">
+          <v-icon style="max-height: 48px; position: relative; bottom: 37.5%; color: #c62828; cursor: pointer;"
+                  @click="removeFromCart (props.item.id)">delete_forever
+          </v-icon>
+          <img :src="props.item.image" style="max-width: 100px; max-height: 48px; position: relative; top: 6%;"/>
+          <span style="position:relative; top: -34%; margin-right: 5px;">{{ props.item.name }}</span></td>
         <td class="text-xs-center">{{ props.item.supplier }}</td>
         <td class="text-xs-center">
           <v-text-field
@@ -31,7 +34,7 @@
       <div>جمع کل: {{$store.state.totalPrice | EngToFaNum}} تومان</div>
       <div>هزینه پیک: {{delivery | EngToFaNum}}‌ تومان</div>
       <div>قابل پرداخت: {{delivery + $store.state.totalPrice | EngToFaNum}}‌ تومان</div>
-      <v-btn color="teal" class="checkout" @click="checkout" :disabled="checkoutDisabled" dark="checkoutDisabled">
+      <v-btn color="teal" class="checkout" @click="checkout" :disabled="checkoutDisabled" :dark="!checkoutDisabled">
         <span>پرداخت</span>
         <v-icon right>credit_card</v-icon>
       </v-btn>
@@ -72,6 +75,22 @@
         <td class="text-xs-right">{{ props.item.address }}</td>
       </template>
     </v-data-table>
+
+    <v-layout row justify-center>
+      <v-dialog v-model="dialog" persistent max-width="290">
+        <v-card>
+          <v-card-title class="headline">حذف از سبد کالا</v-card-title>
+          <v-card-text>
+            آیا مطمئن به حذف این کالا هستید؟
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="green darken-1" flat @click.native="removeConfirmed">بله</v-btn>
+            <v-btn color="green darken-1" flat @click.native="dialog = false">خیر</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+    </v-layout>
   </div>
 </template>
 
@@ -125,7 +144,8 @@
         ],
         totalPriceWidth: 200,
         delivery: 8000,
-        checkoutDisabled: false
+        checkoutDisabled: false,
+        dialog: false
       }
     },
     methods: {
@@ -133,6 +153,18 @@
         x = this.$options.filters.FaToEngNum(x)
         this.$store.commit('changeQuantity', {id: y, quantity: x})
       },
+      removeFromCart(id) {
+        this.dialog = true
+        this.remove = id
+      },
+      removeConfirmed() {
+        this.$store.commit('removeFromCart', this.remove)
+        this.dialog = false
+
+      },
+      checkout() {
+
+      }
     },
     mounted() {
       let that = this;
@@ -144,7 +176,7 @@
       })
     },
     watch: {
-      selected (newVal) {
+      selected(newVal) {
         if (newVal.length > 0) {
           this.delivery = 8000
           this.checkoutDisabled = false
@@ -177,6 +209,10 @@
     height: 45px;
     margin-left: 0;
     margin-top: 35px;
+  }
+
+  .dialog {
+    direction: rtl;
   }
 
 </style>

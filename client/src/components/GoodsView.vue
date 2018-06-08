@@ -33,7 +33,7 @@
         v-model="snackbar"
       >
         {{ snackbarText }}
-        <v-btn flat color="pink" @click.native="snackbar = false">Close</v-btn>
+        <v-btn flat color="pink" @click.native="snackbar = false">بستن</v-btn>
       </v-snackbar>
     </v-layout>
   </div>
@@ -97,6 +97,10 @@
       height: 45px;
       margin-right: 0;
       float: left;
+    }
+
+    .snack button {
+      margin: 0 24px 0 0;
     }
   }
 

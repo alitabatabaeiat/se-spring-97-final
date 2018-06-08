@@ -42,10 +42,14 @@ const store = new Vuex.Store({
       state.totalPrice += p.price * (product.quantity - p.quantity)
       p.quantity = product.quantity
     },
-    removeFromCart (state, product) {
-      let index = state.cart.indexOf(product)
+    removeFromCart (state, productID) {
+      let p = state.cart.find(p => {
+        return p.id === productID
+      })
+      let index = state.cart.indexOf(p)
+      console.log(index)
       state.totalPrice -= state.cart[index].price * state.cart[index].quantity
-      delete state.cart[index]
+      state.cart.splice(index, 1)
     }
   }
 })
