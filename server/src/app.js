@@ -61,7 +61,6 @@ app.get('/goods', async (req, res) => {
 app.get('/goods/:id', async (req, res) => {
     let goods = await Goods.findById(req.params.id)
     let user = await User.findById(goods.supplier)
-    console.log(user)
     res.status(200).json({
         goods: {
             id: goods.id,
@@ -75,6 +74,14 @@ app.get('/goods/:id', async (req, res) => {
             },
             description: goods.description
         },
+        success: true
+    })
+})
+
+app.post('/goods/:id', async (req, res) => {
+
+    await Goods.findOneAndUpdate({_id: req.params.id}, {$inc: {quantity: -req.body.quantity}})
+    res.status(200).json({
         success: true
     })
 })

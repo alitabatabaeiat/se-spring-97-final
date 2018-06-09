@@ -6,5 +6,8 @@ export default {
   },
   fetchOneGoods (id) {
     return Api().get(`goods/${id}`)
+  },
+  updateOneGoods (id, quantity) {
+    return Api().post(`goods/${id}`, {quantity})
   }
 }

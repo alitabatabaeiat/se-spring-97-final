@@ -108,7 +108,6 @@
 <script>
   import GoodsService from '@/services/GoodsService'
 
-
   export default {
     data() {
       return {
@@ -171,9 +170,6 @@
         let p = this.$store.state.cart.find(p => {
           return p.id === id
         })
-        console.log(quantity)
-        console.log(p.quantity)
-        console.log(q)
         if (q < parseInt(quantity) + parseInt(p.quantity)) {
           this.snackbar = true
           return
@@ -190,8 +186,12 @@
         if (this.$store.state.cart.length === 0)
           this.checkoutDisabled = true
       },
-      checkout() {
-
+      async checkout() {
+        const cart = this.$store.state.cart
+        for (let i = 0; i < cart.length; i++)
+          await GoodsService.updateOneGoods(cart[i].id, cart[i].quantity)
+        this.$store.commit('clearCart')
+        this.$router.push('/checkout')
       }
     },
     mounted() {

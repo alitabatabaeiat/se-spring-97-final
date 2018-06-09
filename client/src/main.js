@@ -19,7 +19,7 @@ const store = new Vuex.Store({
     totalPrice: 0
   },
   mutations: {
-    addToCart(state, newProduct) {
+    addToCart (state, newProduct) {
       let product = state.cart.find(product => {
         return product.id === newProduct.id
       })
@@ -38,7 +38,7 @@ const store = new Vuex.Store({
         })
       state.totalPrice += state.cart[state.cart.length - 1].price
     },
-    changeQuantity(state, product) {
+    changeQuantity (state, product) {
       let p = state.cart.find(p => {
         return p.id === product.id
       })
@@ -46,7 +46,7 @@ const store = new Vuex.Store({
       state.totalPrice += p.price * (product.quantity - p.quantity)
       p.quantity = product.quantity
     },
-    removeFromCart(state, productID) {
+    removeFromCart (state, productID) {
       let p = state.cart.find(p => {
         return p.id === productID
       })
@@ -54,6 +54,10 @@ const store = new Vuex.Store({
       console.log(index)
       state.totalPrice -= state.cart[index].price * state.cart[index].quantity
       state.cart.splice(index, 1)
+    },
+    clearCart (state) {
+      state.cart = []
+      state.totalPrice = 0
     }
   }
 })
